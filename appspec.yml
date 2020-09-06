@@ -3,8 +3,20 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/dotnet
+permissions:
+  - object: /home/ec2-user/dotnet
+    pattern: "**"
+    owner: ec2-user
+    mode: 644
+    type:
+      - directory
 hooks:
+  BeforeInstall:
+    - location: scripts/rebuild_images.sh
+      timeout 300
+      runas: ec2-user
   ApplicationStart:
-    - location: scripts/start_server.sh
+    - location: scripts/service_start.sh
       timeout: 300
       runas: ec2-user
+
